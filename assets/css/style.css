@@ -1,0 +1,580 @@
+/* ==========================================
+   1. 全域初始化與字體設定
+   ========================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Microsoft JhengHei", sans-serif;
+    line-height: 1.6;
+    color: #333333;
+    background-color: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* ==========================================
+   2. 頁首與頁尾 (Header & Footer)
+   ========================================== */
+header {
+    background-color: #1f2937; /* 深深灰 */
+    color: #ffffff;
+    padding: 15px 20px;        /* 稍微縮減上下留白，讓整體高度更精緻 */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.header-container {
+    display: flex;
+    align-items: center;       /* 垂直居中 */
+    justify-content: space-between; /* 【關鍵】強制將左邊的內容與右邊的語言選單推至兩端 */
+    flex-wrap: nowrap;         /* 【關鍵】強制絕對不准斷行 */
+    max-width: 1000px;
+    width: 100%;               /* 確保容器撐滿 */
+    margin: 0 auto;
+    position: relative;
+}
+.header-logo {
+    height: 40px;              
+    width: auto;
+    object-fit: contain;
+}
+
+header h1 {
+    font-size: 1.6rem;         
+    font-weight: 600;
+    letter-spacing: 1px;
+    line-height: 1;            
+}
+
+/* ==========================================
+   2b. Header 專用：下拉式語言選單
+   ========================================== */
+.lang-dropdown {
+    margin-left: auto;         /* 【核心魔法】利用 Flexbox 自動撐滿左側，將選單死死磁吸在最右邊！ */
+    position: relative;
+    display: inline-block;
+    flex-shrink: 0;            /* 防止按鈕因為左邊字太長而被擠壓變形 */
+}
+
+/* 下拉選單按鈕（配合深色 Header 調整文字顏色） */
+.dropbtn {
+    background-color: transparent;
+    color: #cbd5e1;            /* 預設亮灰色，在深色背景上更清晰 */
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;       /* 防止按鈕文字斷行 */
+    transition: color 0.2s;
+}
+
+.dropbtn .arrow {
+    font-size: 0.7rem;
+    transition: transform 0.2s;
+}
+
+/* 下拉選單彈出的方塊（白底深字，與網頁主體呼應） */
+.dropdown-content {
+    display: none;             /* 預設完全隱藏 */
+    position: absolute;        /* 絕對定位，漂浮在內容上方 */
+    right: 0;                  /* 靠右對齊按鈕，絕對不會超出螢幕 */
+    top: 100%;                 /* 緊貼在 Header 正下方 */
+    background-color: #ffffff;
+    min-width: 150px;          /* 確保寬度足夠，字體不換行 */
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2); /* 增加略深的陰影，使其更立體 */
+    border-radius: 6px;        /* 高級感圓角 */
+    overflow: hidden;
+    z-index: 9999;             /* 確保展開時蓋在 nav 與搬遷通知欄之上 */
+}
+
+.dropdown-content a {
+    color: #374151 !important; /* 深灰色字體 */
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;            /* 每個選項各佔據獨立一行 */
+    font-size: 0.9rem;
+    text-align: left;          /* 選項文字靠左 */
+}
+
+.dropdown-content a:hover {
+    background-color: #f3f4f6; /* 滑鼠移過去變淺灰底 */
+    color: #1f2937 !important;
+}
+
+/* ⚡ 核心功能：滑鼠 Hover 總容器時一秒展現選單 */
+.lang-dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.lang-dropdown:hover .dropbtn {
+    color: #ffffff;            /* 滑鼠移入時按鈕文字變純白 */
+}
+
+.lang-dropdown:hover .arrow {
+    transform: rotate(180deg); /* 箭頭旋轉成 ▲ */
+}
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #1f2937;
+    color: #9ca3af;
+    font-size: 0.9rem;
+    margin-top: auto; /* 確保內容少時，頁尾仍能釘在螢幕最下方 */
+}
+
+/* ==========================================
+   3. 導覽列與自動下拉選單 (全新重構版)
+   ========================================== */
+nav {
+    background-color: #374151;
+    padding: 0;
+    position: sticky; /* 捲動時固定在頂部 */
+    top: 0;
+    z-index: 100;
+    width: 100%;
+}
+
+/* 隱形包裝盒：讓主頁與下拉按鈕集體在導覽列中央排排站 */
+.nav-links {
+    display: flex;
+    justify-content: center; /* 完美水平居中 */
+    align-items: center;     /* 垂直居中 */
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* 導覽列中的普通超連結（如：主頁） */
+.nav-links > a {
+    display: inline-block;
+    color: #f3f4f6;
+    padding: 15px 25px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.nav-links > a:hover {
+    background-color: #4b5563;
+    color: #ffffff;
+}
+
+/* 下拉選單總容器 */
+.nav-dropdown {
+    position: relative; /* 定位基準，確保展開的清單貼在下面 */
+    display: inline-block;
+}
+
+/* 下拉選單的觸發按鈕（外觀維持跟普通連結一模一樣） */
+.nav-dropbtn {
+    background-color: transparent;
+    color: #f3f4f6;
+    padding: 15px 25px;
+    font-size: 0.95rem;      /* 搭配原本連結的大小 */
+    font-family: inherit;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+/* 小箭頭微調 */
+.nav-dropbtn .arrow {
+    font-size: 0.7rem;
+    transition: transform 0.2s;
+}
+
+/* ⚡ 核心功能：滑鼠移入時，按鈕背景變色，小箭頭轉向 ▲ */
+.nav-dropdown:hover .nav-dropbtn {
+    background-color: #4b5563;
+    color: #ffffff;
+}
+
+.nav-dropdown:hover .arrow {
+    transform: rotate(180deg);
+}
+
+/* 預設隱藏的下拉選單內容方塊 */
+.nav-dropdown-content {
+    display: none;             /* 預設完全隱藏 */
+    position: absolute;        /* 絕對定位，漂浮在內容上方 */
+    left: 0;                   /* 靠左對齊按鈕 */
+    background-color: #ffffff; /* 下拉選單採用白底，極具高質感對比 */
+    min-width: 160px;          /* 寬度稍微撐開，確保字不亂斷行 */
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.15); /* 陰影 */
+    border-radius: 0 0 6px 6px;/* 下方圓角 */
+    overflow: hidden;
+    z-index: 1000;             /* 站在最上層，甚至超越搬遷通知欄 */
+}
+
+/* 下拉選單內部的細項超連結 */
+.nav-dropdown-content a {
+    color: #374151 !important; /* 強制深灰色字體 */
+    padding: 12px 20px;
+    text-decoration: none;
+    display: block;            /* 讓每個選項各佔據獨立一行 */
+    font-size: 0.95rem;
+    text-align: left;          /* 選項靠左對齊，方便人類閱讀習慣 */
+    transition: background-color 0.2s;
+}
+
+/* 當滑鼠移到細項選單的項目上時 */
+.nav-dropdown-content a:hover {
+    background-color: #f3f4f6; /* 變為亮灰色底 */
+    color: #111827 !important; /* 字體變更深 */
+}
+
+/* ⚡ 核心魔法：當滑鼠 Hover 總容器時，一秒展現下拉選單 */
+.nav-dropdown:hover .nav-dropdown-content {
+    display: block;
+}
+/* ==========================================
+   4. 主內容區容器
+   ========================================== */
+.container {
+    max-width: 1000px;
+    width: 90%;
+    margin: 40px auto;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.container h2 {
+    color: #111827;
+    margin-bottom: 20px;
+    border-left: 5px solid #2563eb; /* 藍色側邊條，突出標題 */
+    padding-left: 15px;
+    font-size: 1.5rem;
+}
+
+.container p {
+    margin-bottom: 15px;
+    color: #000000;  /*or #4b5563 */
+}
+
+/* ==========================================
+   5. 產品頁面專用：產品網格與卡片
+   ========================================== */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.product-card {
+    border: 1px solid #e5e7eb;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    background: #ffffff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.product-card img {
+    max-width: 100%;
+    height: 200px;
+    object-fit: contain; /* 確保各種比例的產品圖都不會變形 */
+    margin-bottom: 15px;
+    background-color: #f3f4f6; /* 沒圖片時的灰色佔位底色 */
+    border-radius: 4px;
+}
+
+.product-card h3 {
+    color: #1f2937;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.product-card p {
+    font-size: 0.95rem;
+    color: #6b7280;
+    margin-bottom: 20px;
+    min-height: 45px; /* 保持卡片高度對齊 */
+}
+
+/* ==========================================
+   6. 按鈕樣式 (Buttons)
+   ========================================== */
+.btn-download {
+    display: inline-block;
+    background-color: #2563eb; /* 專業企業藍 */
+    color: #ffffff !important;
+    padding: 10px 24px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: background-color 0.2s ease;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+}
+
+.btn-download:hover {
+    background-color: #1d4ed8; /* 懸停時變深藍 */
+}
+
+/* ==========================================
+   7. 彈出視窗 (Modal) 專用樣式（全新追加置中優化）
+   ========================================== */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6); /* 半透明黑色背景 */
+    display: none; /* 預設隱藏，由 JS 控制顯示 */
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.modal-box {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.2s ease-out;
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #9ca3af;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.modal-close-btn:hover {
+    color: #374151;
+}
+
+.modal-body {
+    /* 使用 Flexbox 排版強迫所有內層元件（圖片、按鈕等）水平正置中 */
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    text-align: center;
+    padding-top: 10px;
+}
+
+.modal-body img {
+    max-width: 100%;
+    max-height: 250px;
+    object-fit: contain;
+    margin-bottom: 20px;
+    border-radius: 6px;
+}
+
+.modal-body h3 {
+    color: #111827;
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+}
+
+.modal-body p {
+    text-align: left; /* 長篇描述文字靠左，最符合人類閱讀習慣 */
+    color: #4b5563;
+    font-size: 0.95rem;
+    margin-top: 5px;
+    margin-bottom: 25px;
+    white-space: pre-line; /* 支援 JS 傳入的文字換行 */
+    width: 100%; /* 確保文字塊橫向撐滿，左對齊才會好看 */
+}
+
+/* 視窗彈出時的微調淡入動畫 */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* ==========================================
+   8. 網頁搬遷通知欄 (Announcement Bar)
+   ========================================== */
+.announcement-bar {
+    background-color: #fef3c7; /* 溫和的亮黃色背景 */
+    border-bottom: 1px solid #fde68a;
+    color: #92400e;            /* 深琥珀色文字，確保對比度足夠、好閱讀 */
+    padding: 12px 50px 12px 20px; /* 右邊留空多一點，避免文字撞到關閉按鈕 */
+    position: relative;
+    display: flex;
+    justify-content: center;   /* 讓內容在電腦版居中 */
+    align-items: center;
+    transition: all 0.3s ease; /* 關閉時的微動畫效果 */
+    z-index: 90;               /* 確保排在導覽列 (z-index: 100) 的下方，滾動時不會打架 */
+}
+
+.banner-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 1000px;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.banner-icon {
+    font-size: 1.2rem;
+}
+
+.banner-content p {
+    margin: 0; /* 覆蓋掉你原本 .container p 的 margin-bottom 設定 */
+    color: #92400e;
+}
+
+/* ❌ 關閉按鈕樣式 */
+.close-banner-btn {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%); /* 垂直完美居中 */
+    background: none;
+    border: none;
+    font-size: 24px;
+    font-weight: bold;
+    color: #b45309;
+    cursor: pointer;
+    line-height: 1;
+    padding: 5px;
+    transition: color 0.2s;
+}
+
+.close-banner-btn:hover {
+    color: #78350f; /* 滑鼠滑過時顏色變深 */
+}
+
+/* 響應式優化：手機版時文字靠左，方便閱讀 */
+@media (max-width: 768px) {
+    .announcement-bar {
+        justify-content: flex-start;
+    }
+}
+/* ==========================================
+   9. 遊戲選單風格：橫向滑動展示區 (Product Slider)
+   ========================================== */
+.product-slider {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;          /* 橫向溢出時自動啟用滾動條 */
+    padding: 15px 5px 25px 5px;/* 底部留白給滾動條和卡片陰影 */
+    scroll-snap-type: x mandatory; /* 核心魔法：滑動時會像 App 一樣磁吸自動對齊卡片 */
+    scrollbar-width: thin;     /* 讓 Firefox 的滾動條變細 */
+    scrollbar-color: #9ca3af transparent;
+}
+
+/* 針對 Chrome, Safari 和 Edge 瀏覽器優化滾動條外觀 */
+.product-slider::-webkit-scrollbar {
+    height: 6px;               /* 滾動條高度（精緻細線） */
+}
+.product-slider::-webkit-scrollbar-track {
+    background: #f3f4f6;       /* 滾動條軌道底色 */
+    border-radius: 10px;
+}
+.product-slider::-webkit-scrollbar-thumb {
+    background: #cbd5e1;       /* 滾動條滑塊顏色 */
+    border-radius: 10px;
+}
+.product-slider::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;       /* 滑鼠移上去時滾動條變深 */
+}
+
+/* 🎴 單張產品卡片樣式 */
+.slider-card {
+    flex: 0 0 260px;           /* 【關鍵】不允許壓縮，每張卡片固定 260px 寬度 */
+    scroll-snap-align: start;  /* 配合外層，讓卡片磁吸對齊邊緣 */
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;       /* 圓角大一點，更有遊戲 UI 卡牌感 */
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    transition: all 0.25s ease;
+}
+
+/* 滑鼠懸停在卡片上的高級動態效果（像選中遊戲角色一樣托高） */
+.slider-card:hover {
+    transform: translateY(-8px);
+    border-color: #2563eb;     /* 邊框變公司主色藍 */
+    box-shadow: 0 12px 20px rgba(37, 99, 235, 0.12);
+}
+
+/* 卡片內的圖片 */
+.slider-card img {
+    width: 100%;
+    height: 140px;
+    object-fit: contain;
+    background-color: #f9fafb;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.slider-card h3 {
+    font-size: 1.1rem;
+    color: #111827;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.slider-card p {
+    font-size: 0.85rem;
+    color: #6b7280;
+    line-height: 1.5;
+    margin-bottom: 15px;
+    height: 40px;              /* 固定文字高度防止卡片歪斜 */
+    overflow: hidden;          /* 字數太多時自動截斷 */
+}
+
+/* 卡片內的小型按鈕 */
+.btn-download-sm {
+    display: inline-block;
+    background-color: #f3f4f6;
+    color: #374151;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+.slider-card:hover .btn-download-sm {
+    background-color: #2563eb;
+    color: #ffffff !important;
+}
+
+/* 🏷️ 可選：精緻的小標籤（例如：熱門、新品） */
+.slider-card .badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #ef4444; /* 亮紅色 */
+    color: #ffffff;
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+}
