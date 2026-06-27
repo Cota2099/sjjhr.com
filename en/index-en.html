@@ -1,1 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="icon" type="image/png" href="./images/SJJ Logo.png">
+</head>
+<body>
+    <header>
+    <div class="header-container">
+        
+        <div class="header-left" style="display: flex; align-items: center; gap: 15px;">
+            <img class="header-logo" src="./images/SJJ Logo.png" alt="信達人力資源 Logo">
+            <h1>SJJ Human Resources (China) Limited</h1>
+        </div>
+        
+        <div class="lang-dropdown">
+            <button class="dropbtn">
+                語言 | Language <span class="arrow">▼</span>
+            </button>
+            <div class="dropdown-content">
+                <a href="index.html">繁體中文 (ZH)</a>
+                <a href="./en/index-en.html">English (EN)</a>
+            </div>
+        </div>
+
+    	</div>
+        </header>
+
+	<nav>
+        	<div class="nav-links">
+            	<a href="index.html">Home</a>
+            	<a href="./zh/about-us-zh.html">About</a>
+            		<div class="nav-dropdown">
+                		<button class="nav-dropbtn">Services & Products <span class="arrow">▼</span></button>
+                		<div class="nav-dropdown-content">
+					<a href="./zh/services-zh.html">Overview</a>
+					<a href="./zh/railway-zh.html">Railway Material Supply</a>
+                    			<a href="./zh/confined-space-zh.html">Confined Space Project Support</a>
+                    			<a href="./zh/equipment-zh.html">Consultation and Tech Support</a>
+					<a href="./zh/supply-zh.html">Supply Chain</a>
+                		</div>
+            		</div>
+		<a href="./zh/contact-us-zh.html">Contact Us</a>
+        	</div>
+          </nav>
+	
+      <div id="migration-banner" class="announcement-bar">
+	<div class="banner-content">
+		<span class="banner-icon">📢</span>
+		<p><strong>Web Migration Notice：</strong>New website activated! Follow SJJ On LinkedIn to know more.</p>
+    	</div>
+    	<button class="close-banner-btn" onclick="closeBanner()">&times;</button>
+      </div>
+
+    <div class="container">
+        <h2>Brand New "Confined Space Project Support Service" Now Opened!</h2>
+        <p>Established in 2000, Cinda has provided continuous support to the railway, public transport, airport, building services, and other engineering sectors in Hong Kong and overseas markets for over two decades. The company's services cover material supply, product procurement, import and export, technical consulting, design-related coordination, and project-based engineering support.</p>
+        <p>In light of the new guidelines introduced in Hong Kong regarding enclosure works, Cinda is now providing relevant equipment and manpower support services. Please click here for more information:<strong></strong></p>
+	<a href="./zh/confined-space-zh.html">
+        <img src="./images/web-banner.jpg" alt=SJJ Confined Space Services></div>
+</div>
+
+      <div style="text-align: center; margin-top: 0px;">
+            <a href="./zh/services-zh.html" class="btn-primary">Browse Services and Products &rarr;</a>
+    </div>
+
+<div class="container">
+    <h2>Our Focus</h2>
+    
+    <div class="product-grid">
+        
+        <div class="product-card">
+            <img src="./images/project-load-testing.jpg" alt="鐵路、公共交通、機場設施">
+            <h3>鐵路、公共交通、機場設施</h3>
+            <p>為鐵路、公共交通及相關基建工程提供項目所需物料及產品支援，協助項目團隊處理規格、供應及交付安排。</p>
+        </div>
+
+        <div class="product-card">
+            <img src="./images/project-confined-space.jpg" alt="密閉空間工程">
+            <h3>密閉空間工程支援</h3>
+            <p>配合密閉空間(或稱受限空間)下的設備操作、現場安全要求及工程支援安排。</p>
+	  </div>
+
+       	<div class="product-card">
+            <img src="./images/stock-eee.jpg" alt="專業設備">
+            <h3>專業支援及供應鏈服務</h3>
+            <p>提供技術資料、測試及實際使用協助；提供產品尋源及進出口安排、設計項目制供應鏈支援。</p>
+            </div>
+
+    </div>
+    </div>
+
+
+
+    <footer>
+        <p>&copy; 2026 SJJHR(China)Ltd. All Rights Reserved.</p>
+    </footer>
+
+<script>
+    // 網頁載入時，先檢查客戶之前有沒有關閉過
+    window.onload = function() {
+        if (localStorage.getItem('migrationBannerClosed') === 'true') {
+            document.getElementById('migration-banner').style.display = 'none';
+        }
+    }
+
+    function closeBanner() {
+        var banner = document.getElementById('migration-banner');
+        banner.style.display = 'none';
+        // 在客人的瀏覽器上記住「已關閉」的狀態
+        localStorage.setItem('migrationBannerClosed', 'true');
+    }
+</script>
+
+</body>
+</html>
 
